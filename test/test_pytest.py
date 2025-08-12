@@ -1,5 +1,5 @@
 import pytest
-from libgen_api.libgen_search import LibgenSearch
+from libgen_api_refhub.libgen_search import LibgenSearch
 
 title = "Pride and Prejudice"
 author = "Agatha Christie"

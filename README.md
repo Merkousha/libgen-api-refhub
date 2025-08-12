@@ -2,16 +2,31 @@
 
 ![logo](logo.png)
 
-![PyPI - Downloads](https://img.shields.io/pypi/dm/libgen-api?style=plastic)
-![GitHub](https://img.shields.io/github/license/harrison-broadbent/libgen-api?style=plastic)
-![PyPI](https://img.shields.io/pypi/v/libgen-api?style=plastic)
-![GitHub Repo stars](https://img.shields.io/github/stars/harrison-broadbent/libgen-api?style=plastic)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/libgen-api-refhub?style=plastic)
+![GitHub](https://img.shields.io/github/license/Merkousha/libgen-api-refhub?style=plastic)
+![PyPI](https://img.shields.io/pypi/v/libgen-api-refhub?style=plastic)
+![GitHub Repo stars](https://img.shields.io/github/stars/Merkousha/libgen-api-refhub?style=plastic)
 
 </div>
 
 Search Library Genesis programmatically using a simple Python library.
 
-Allows you to search Library Genesis by title or author, filter results, and resolve download links.
+Allows you to search Library Genesis by title or author, filter results, resolve download links, and get book cover images.
+
+## Acknowledgments
+
+This project is a fork of the original [libgen-api](https://github.com/harrison-broadbent/libgen-api) library created by [Harrison Broadbent](https://github.com/harrison-broadbent). We extend our sincere gratitude to the original author for creating this excellent library and making it open source. This fork builds upon the original work with additional features and improvements.
+
+## New Features
+- **Dynamic Domain Selection**: Automatically finds and uses the fastest working LibGen mirror
+- **Book Cover Images**: Added ability to fetch book cover images
+- **Improved Reliability**: Better error handling and domain fallback
+- **Browser Simulation**: Added realistic browser headers to prevent blocking
+- **Better Title Extraction**: Improved accuracy in extracting book titles from search results
+- **Concurrent Domain Testing**: Tests multiple domains simultaneously to find the fastest one
+- **Enhanced Error Handling**: Better timeout and error management for domain testing
+- **Realistic Browser Headers**: Comprehensive browser simulation to avoid detection
+- **Image Resolution**: New method to extract book cover images from search results
 
 ## Contents
 
@@ -26,7 +41,6 @@ Allows you to search Library Genesis by title or author, filter results, and res
 - [More Examples](#more-examples)
 - [Further Information](#further-information)
 - [Testing](#testing)
-- [Contributors](#contributors)
 
 ---
 
@@ -39,7 +53,7 @@ Please ⭐ if you find this useful!
 Install the package -
 
 ```
-pip install libgen-api
+pip install libgen-api-refhub
 ```
 
 Perform a basic search -
@@ -47,8 +61,18 @@ Perform a basic search -
 ```python
 # search_title()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 s = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 results = s.search_title("Pride and Prejudice")
 print(results)
 ```
@@ -66,8 +90,18 @@ Search by title or author:
 ```python
 # search_title()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 s = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 results = s.search_title("Pride and Prejudice")
 print(results)
 ```
@@ -77,8 +111,18 @@ print(results)
 ```python
 # search_author()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 s = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 results = s.search_author("Jane Austen")
 print(results)
 ```
@@ -96,9 +140,19 @@ Skip to the [Examples](#filtered-title-searching)
 ```python
 # search_title_filtered()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 
 tf = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 title_filters = {"Year": "2007", "Extension": "epub"}
 titles = tf.search_title_filtered("Pride and Prejudice", title_filters, exact_match=True)
 print(titles)
@@ -109,9 +163,19 @@ print(titles)
 ```python
 # search_author_filtered()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 
 af = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 author_filters = {"Language": "German", "Year": "2009"}
 titles = af.search_author_filtered("Agatha Christie", author_filters, exact_match=True)
 print(titles)
@@ -122,9 +186,19 @@ print(titles)
 ```python
 # search_author_filtered(exact_match = False)
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 
 ne_af = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 partial_filters = {"Year": "200"}
 titles = ne_af.search_author_filtered("Agatha Christie", partial_filters, exact_match=False)
 print(titles)
@@ -169,9 +243,19 @@ returns a dictionary of all the download links for `Mirror_1` (each mirror link 
 ```python
 # resolve_download_links()
 
-from libgen_api import LibgenSearch
+from libgen_api_refhub import LibgenSearch
 
 s = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
 results = s.search_author("Jane Austen")
 item_to_download = results[0]
 download_links = s.resolve_download_links(item_to_download)
@@ -188,6 +272,66 @@ Example output:
   "Infura": "http://example.com/file.epub"
 }
 ```
+
+## Resolving book cover images
+
+You can also extract book cover images from search results using the `resolve_image()` method.
+
+This method accepts a single result (type: dictionary) from the array of searched results, and
+returns the URL of the book cover image if available:
+
+```python
+# resolve_image()
+
+from libgen_api_refhub import LibgenSearch
+
+s = LibgenSearch()
+results = s.search_author("Jane Austen")
+item_to_get_image = results[0]
+image_url = s.resolve_image(item_to_get_image)
+print(image_url)
+```
+
+Example output:
+```
+http://example.com/covers/book_cover.jpg
+```
+
+## Dynamic domain selection
+
+The library now includes a method to automatically find the fastest working LibGen mirror from a list of domains:
+
+```python
+# find_fastest_domain()
+
+from libgen_api_refhub import LibgenSearch
+
+s = LibgenSearch()
+domains = [
+    "https://libgen.bz",
+    "https://libgen.li", 
+    "https://libgen.la",
+    "https://libgen.vg",
+    "https://libgen.gs",
+    "https://libgen.gl",
+]
+
+fastest_domain = s.find_fastest_domain(domains)
+print(f"Using fastest domain: {fastest_domain}")
+```
+
+This method tests all domains concurrently and automatically sets the fastest responding domain for future requests.
+
+## Enhanced browser simulation
+
+The library now includes comprehensive browser simulation to avoid detection and blocking:
+
+- **Realistic User-Agent**: Uses Firefox browser headers
+- **Complete HTTP Headers**: Includes Accept, Accept-Language, Accept-Encoding, and other standard headers
+- **Security Headers**: Implements DNT, Sec-Fetch-* headers for modern browser compatibility
+- **Connection Management**: Proper keep-alive and cache control headers
+
+This ensures better compatibility with LibGen mirrors and reduces the likelihood of being blocked.
 
 ## More Examples
 
@@ -229,13 +373,13 @@ Results are returned as a list of dictionaries:
 
 ## Testing
 
-libgen-api uses Pytest to run unit tests.
+libgen-api-refhub uses Pytest to run unit tests.
 
 To run the tests -
 
 - ## Clone this repo -
   ```
-  git clone https://github.com/harrison-broadbent/libgen-api.git && cd libgen-api
+  git clone https://github.com/Merkousha/libgen-api-refhub.git && cd libgen-api-refhub
   ```
 - ## Install dependencies with -
   ```

@@ -13,7 +13,7 @@ twine = "*"
 wheel = "*"
 lxml = "*"
 black = "*"
-libgen-api = "*"
+libgen-api-refhub = "*"
 pytest = "*"
 flake8 = "*"
 
