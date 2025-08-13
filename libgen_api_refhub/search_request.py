@@ -105,4 +105,9 @@ class SearchRequest:
         ]
 
         output_data = [dict(zip(self.col_names, row)) for row in raw_data]
+        
+        for item in output_data:
+                if not item["Mirror_1"].startswith(('http://', 'https://')):
+                    item["Mirror_1"] = self.__class__.domain + item["Mirror_1"]
+        
         return output_data

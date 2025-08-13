@@ -90,19 +90,17 @@ class LibgenSearch:
     def resolve_download_links(self, item):
         mirror_1 = item["Mirror_1"]
         domain_prefix = SearchRequest.domain + "/"
-        page = requests.get(domain_prefix+mirror_1)
+        page = requests.get(mirror_1)
         soup = BeautifulSoup(page.text, "html.parser")
         links = soup.find_all("a", string=MIRROR_SOURCES)
-        download_links = {link.string: domain_prefix+link["href"] for link in links}
-        return download_links
+        return domain_prefix+links[0]["href"]
     
     def resolve_image(self, item):
         bookpage = item["Mirror_1"]
-        domain_prefix = SearchRequest.domain + "/"
-        page = requests.get(domain_prefix+bookpage)
+        page = requests.get(bookpage)
         soup = BeautifulSoup(page.text, "html.parser")
         img = soup.find("img", src=lambda x: x and x.startswith('/covers'))
-        imgsrcurl = domain_prefix+img["src"] if img else ""
+        imgsrcurl =  SearchRequest.domain+img["src"] if img else ""
         return imgsrcurl
 
 

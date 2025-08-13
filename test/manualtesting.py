@@ -44,11 +44,12 @@ print(
 )
 
 titles = tf.search_title_filtered(title, title_filters, exact_match=False)
-# resolve_download_links = tf.resolve_download_links(titles[0]) if titles else {}
 print(titles[0])
+resolve_download_links = tf.resolve_download_links(titles[0]) if titles else {}
 resolve_image = tf.resolve_image(titles[0]) if titles else {}
 # for item in titles:
 #     print(item)
 # print("Download links: ", resolve_download_links)
 print("Image URL: ", resolve_image)
+print("Download links: ", resolve_download_links)
 
