@@ -15,7 +15,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from libgen_api_refhub  import LibgenSearch
 import json
 
-title = "C sharp in a Nutshell"
+title = "Linux Essentials for Hackers & Pentesters: Kali Linux Basics for Wireless Hacking, Penetration Testing, VPNs, Proxy Servers and Networking Commands"
 
 libgen_domains = [
     "https://libgen.bz",

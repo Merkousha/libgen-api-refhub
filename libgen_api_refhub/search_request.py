@@ -17,6 +17,7 @@ class SearchRequest:
 
     col_names = [
         "Title",
+        "BookDetailPage",
         "Author",
         "Publisher",
         "Year",
@@ -87,27 +88,47 @@ class SearchRequest:
         # or link text (for the title) should be preserved.
         # Both the book title and mirror links have a "title" attribute,
         # but only the mirror links have it filled.(title vs title="libgen.io")
-        raw_data = [
-            [
-                (
-                 td.find("b").get_text(strip=True)
-                 if td.find("b") and td.find("b").get_text(strip=True)
-                 else next((s for s in td.stripped_strings if s.strip()), "")
-                ) if i == 0 else
-                td.a["href"]
-                if td.find("a")
-                and td.find("a").has_attr("title")
-                and td.find("a")["title"] != ""
-                else "".join(td.stripped_strings)
-                for i, td in enumerate(row.find_all("td"))
-            ]
-            for row in information_table.find_all("tr")[1:]  # Skip row 0 as it is the headings row
-        ]
+        raw_data = []
+        for row in information_table.find_all("tr")[1:]:  # Skip row 0 as it is the headings row
+            row_data = []
+            for i, td in enumerate(row.find_all("td")):
+                if i == 0:  # ستون عنوان کتاب
+                    # استخراج متن عنوان
+                    title_text = (
+                        td.find("b").get_text(strip=True)
+                        if td.find("b") and td.find("b").get_text(strip=True)
+                        else next((s for s in td.stripped_strings if s.strip()), "")
+                    )
+                    row_data.append(title_text)
+                    
+                    # استخراج لینک صفحه جزئیات کتاب
+                    book_detail_link = ""
+                    if td.find("a") and td.find("a").has_attr("href"):
+                        book_detail_link = td.find("a")["href"]
+                    row_data.append(self.__class__.domain +'/' + book_detail_link)
+                else:
+                    # برای سایر ستون‌ها
+                    cell_data = (
+                        td.a["href"]
+                        if td.find("a")
+                        and td.find("a").has_attr("title")
+                        and td.find("a")["title"] != ""
+                        else "".join(td.stripped_strings)
+                    )
+                    row_data.append(cell_data)
+            raw_data.append(row_data)
 
         output_data = [dict(zip(self.col_names, row)) for row in raw_data]
         
         for item in output_data:
+            if item.get("Mirror_1") and item["Mirror_1"].strip():
+                # اگر Mirror_1 با http شروع نشده، domain را اضافه کن
                 if not item["Mirror_1"].startswith(('http://', 'https://')):
                     item["Mirror_1"] = self.__class__.domain + item["Mirror_1"]
+            
+            # اضافه کردن domain به BookDetailPage اگر خالی نباشد
+            if item.get("BookDetailPage") and item["BookDetailPage"].strip():
+                if not item["BookDetailPage"].startswith(('http://', 'https://')):
+                    item["BookDetailPage"] = self.__class__.domain + item["BookDetailPage"]
         
         return output_data
