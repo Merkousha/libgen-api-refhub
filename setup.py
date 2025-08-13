@@ -17,9 +17,9 @@ setuptools.setup(
     classifiers=[
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
     keywords=["libgen search", "libgen api", "search libgen", "search library genesis"],
     install_requires=["bs4", "requests", "lxml"],
+    python_requires=">=3.7",
 )

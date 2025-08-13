@@ -1,0 +1,10 @@
+include README.md
+exclude LICENSE*
+exclude *.pyc
+exclude *.pyo
+exclude __pycache__
+exclude .git*
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .git*
